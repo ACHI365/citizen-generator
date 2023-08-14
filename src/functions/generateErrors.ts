@@ -51,8 +51,8 @@ function rndAttr() {
     { v: "firstName", t: "alpha" },
     ...(hasMiddleName ? [{ v: "middleName", t: "alpha" }] : []),
     { v: "lastName", t: "alpha" },
-    { v: "address", t: "alphanumeric" },
-    { v: "phoneNumber", t: "numeric" },
+    { v: "address", t: "alphaNum" },
+    { v: "phoneNumber", t: "num" },
   ]);
 }
 
@@ -74,6 +74,7 @@ function intrErrSingle(citizen: Citizen, attr: ChangableElements, changeType: st
   });
   const errType = faker.number.int({ max: 2 });
   let errChar = genErrChar(changeType);
+  
   citizen[attr] = mkErr(
     citizen[attr],
     errType,
