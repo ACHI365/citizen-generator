@@ -1,6 +1,6 @@
-import React from 'react';
-import { Citizen } from '../types/types';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import React from "react";
+import { Citizen } from "../types/types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 type CitizenTableProps = {
   citizens: Citizen[];
@@ -8,7 +8,11 @@ type CitizenTableProps = {
   nextPage: () => void;
 };
 
-const CitizenTable: React.FC<CitizenTableProps> = ({ citizens, hasMiddleName, nextPage }) => {
+const CitizenTable: React.FC<CitizenTableProps> = ({
+  citizens,
+  hasMiddleName,
+  nextPage,
+}) => {
   return (
     <InfiniteScroll
       dataLength={citizens.length}
@@ -19,26 +23,26 @@ const CitizenTable: React.FC<CitizenTableProps> = ({ citizens, hasMiddleName, ne
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
-            <th>Index</th>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Phone Number</th>
+            <th style={{ wordWrap: "break-word", maxWidth: '10px' }}>Index</th>
+            <th style={{ wordWrap: "break-word", maxWidth: '10px' }}>ID</th>
+            <th style={{ wordWrap: "break-word", maxWidth: '10px' }}>Name</th>
+            <th style={{ wordWrap: "break-word", maxWidth: '10px' }}>Address</th>
+            <th style={{ wordWrap: "break-word", maxWidth: '10px' }}>Phone Number</th>
           </tr>
         </thead>
         <tbody>
           {citizens.map((citizen) => (
             <tr key={citizen.id}>
-              <td>{citizen.index}</td>
-              <td>{citizen.id}</td>
-              <td>
+              <td style={{ wordWrap: "break-word", maxWidth: '10px' }}>{citizen.index}</td>
+              <td style={{ wordWrap: "break-word", maxWidth: '10px' }}>{citizen.id}</td>
+              <td style={{ wordWrap: "break-word", maxWidth: '10px' }}>
                 {citizen.firstName +
-                  ' ' +
-                  (hasMiddleName ? citizen.middleName + ' ' : '') +
+                  " " +
+                  (hasMiddleName ? citizen.middleName + " " : "") +
                   citizen.lastName}
               </td>
-              <td>{citizen.address}</td>
-              <td>{citizen.phoneNumber}</td>
+              <td style={{ wordWrap: "break-word", maxWidth: '10px' }}>{citizen.address}</td>
+              <td style={{ wordWrap: "break-word", maxWidth: '10px' }}>{citizen.phoneNumber}</td>
             </tr>
           ))}
         </tbody>
