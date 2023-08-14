@@ -16,11 +16,7 @@ export function applyErrs(citizens: Citizen[], errCnt: number, regionLoc: Region
       const numErrs = getErrCnt(region, errCnt);
       for (let i = 0; i < numErrs; i++) {
         const attr = rndAttr();
-        intrErrSingle(
-          citizen,
-          attr.v as ChangableElements,
-          attr.t
-        );
+        intrErrSingle(citizen, attr.v as ChangableElements, attr.t);
       }
       return citizen;
     });
@@ -44,20 +40,23 @@ function swapChars(arr: string[], errPos: number) {
   arr[errPos + 1] = t;
 }
 
-function rndAttr() {
+function rndAttr(): AttrDefinition {
   const { faker, hasMiddleName } = region;
 
-  return faker.helpers.arrayElement([
+  const attributes: AttrDefinition[] = [
     { v: "firstName", t: "alpha" },
     ...(hasMiddleName ? [{ v: "middleName", t: "alpha" }] : []),
     { v: "lastName", t: "alpha" },
     { v: "address", t: "alphaNum" },
     { v: "phoneNumber", t: "num" },
-  ]);
+  ];
+
+  return faker.helpers.arrayElement(attributes);
 }
 
-function mkErr(attrValue: string,errType: number,errChar: string,errPos: number) {
-  let attrValueArr = attrValue.split("");
+function mkErr(attrValue: string, errType: number, errChar: string, errPos: number): string {
+  const attrValueArr = attrValue.split("");
+
   if (errType === 0) {
     attrValueArr[errPos] = "";
   } else if (errType === 1) {
@@ -65,7 +64,13 @@ function mkErr(attrValue: string,errType: number,errChar: string,errPos: number)
   } else {
     swapChars(attrValueArr, errPos);
   }
+
   return attrValueArr.join("");
+}
+
+interface AttrDefinition {
+  v: string;
+  t: string;
 }
 
 function intrErrSingle(citizen: Citizen, attr: ChangableElements, changeType: string) {
@@ -74,19 +79,26 @@ function intrErrSingle(citizen: Citizen, attr: ChangableElements, changeType: st
   });
   const errType = faker.number.int({ max: 2 });
   let errChar = genErrChar(changeType);
-  
-  citizen[attr] = mkErr(
-    citizen[attr],
-    errType,
-    errChar,
-    errPos
-  );
+  citizen[attr] = mkErr(citizen[attr], errType, errChar, errPos);
 }
 
-function getErrCnt(region: Region, errCnt: number) {
-  const intPart = Math.floor(errCnt);
-  const fracPart = errCnt - intPart;
-  const rndNum = region.faker.number.float({ max: 0.99 });
-  const howMany = rndNum < fracPart ? intPart + 1 : intPart;
-  return howMany;
+function getErrCnt(region: Region, errCnt: number): number {
+  const [intPart, fracPart] = extractIntegerAndFraction(errCnt);
+  const rndNum = generateRandomNumber(region);
+  const totalErr = calculateHowMany(intPart, fracPart, rndNum);
+  return totalErr;
+}
+
+function extractIntegerAndFraction(value: number): [number, number] {
+  const intPart = Math.floor(value);
+  const fracPart = value - intPart;
+  return [intPart, fracPart];
+}
+
+function generateRandomNumber(region: Region): number {
+  return region.faker.number.float({ max: 0.99 });
+}
+
+function calculateHowMany(intPart: number, fracPart: number, rndNum: number): number {
+  return rndNum < fracPart ? intPart + 1 : intPart;
 }
